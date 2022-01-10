@@ -4,9 +4,11 @@ class Zendesk {
   final ChatApi _chatApi = ChatApi();
   final ProfileApi _profileApi = ProfileApi();
 
-  Future<void> init(String accountKey, {String appId}) async {
+  Future<void> init(String accountKey, String appId,
+      {String deviceToken}) async {
     InitializeRequest request = InitializeRequest()
       ..accountKey = accountKey
+      ..deviceToken = deviceToken
       ..appId = appId;
 
     await _chatApi.initialize(request);
@@ -75,7 +77,7 @@ class Zendesk {
       ..iosBackButtonTitle = iosBackButtonTitle
       ..iosNavigationBarColor = iosNavigationBarColor?.value
       ..iosNavigationTitleColor = iosNavigationTitleColor?.value;
-      
+
     await _chatApi.startChat(request);
   }
 }

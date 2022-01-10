@@ -27,7 +27,11 @@ import zendesk.chat.Providers;
 import zendesk.chat.VisitorInfo;
 import zendesk.chat.VisitorInfo.Builder;
 import zendesk.messaging.MessagingActivity;
-
+import zendesk.chat.PushNotificationsProvider;
+import android.util.Log;
+import java.util.List;
+import com.zendesk.service.ErrorResponse;
+import com.zendesk.service.ZendeskCallback;
 /** ZendeskPlugin */
 public class ZendeskPlugin implements FlutterPlugin, ActivityAware, ChatApi, ProfileApi {
 
@@ -89,6 +93,30 @@ public class ZendeskPlugin implements FlutterPlugin, ActivityAware, ChatApi, Pro
     } else {
       Chat.INSTANCE.init(applicationContext, arg.getAccountKey());
     }
+    if (arg.getDeviceToken() == null) {
+      Log.e("onError", "NOOO");
+    } else {
+      PushNotificationsProvider pushProvider = Chat.INSTANCE.providers().pushNotificationsProvider();
+      if (pushProvider != null) {
+        Log.e("onSuccess", "Push Provider");
+        pushProvider.registerPushToken(arg.getDeviceToken(), (ZendeskCallback) (new ZendeskCallback() {
+          public void onSuccess( Void p0) {
+            Log.e("onSuccess", "Success");
+          }
+          public void onSuccess(Object var1) {
+            this.onSuccess((Void)var1);
+          }
+
+          public void onError( ErrorResponse p0) {
+            Log.e("onError", "NOOO");
+          }
+        }));
+
+      } else {
+        Log.e("PushNotificationsProvider", "NULLL");
+      }
+      Log.e("onSuccess", arg.getDeviceToken() );
+    }
   }
 
   @Override
@@ -137,7 +165,7 @@ public class ZendeskPlugin implements FlutterPlugin, ActivityAware, ChatApi, Pro
   @Override
   public void addVisitorTags(VisitorTagsRequest arg) {
     final ProfileProvider profileProvider = getProfileProvider();
-    ArrayList raw = arg.getTags();
+    List<Object> raw = arg.getTags();
     ArrayList<String> tags = new ArrayList<>();
     for (Object o : raw) {
       if (o instanceof String) {
@@ -151,7 +179,7 @@ public class ZendeskPlugin implements FlutterPlugin, ActivityAware, ChatApi, Pro
   @Override
   public void removeVisitorTags(VisitorTagsRequest arg) {
     final ProfileProvider profileProvider = getProfileProvider();
-    ArrayList raw = arg.getTags();
+    List<Object> raw = arg.getTags();
     ArrayList<String> tags = new ArrayList<>();
     for (Object o : raw) {
       if (o instanceof String) {

@@ -3,6 +3,7 @@ import 'package:pigeon/pigeon.dart';
 class InitializeRequest {
   String accountKey;
   String appId;
+  String deviceToken;
 }
 
 class SetDepartmentRequest {
