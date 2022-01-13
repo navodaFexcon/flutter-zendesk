@@ -27,12 +27,9 @@
 }
 
 - (void)initialize:(nonnull InitializeRequest *)input error:(FlutterError * _Nullable __autoreleasing * _Nonnull)error {
-   // [ZDKChat initializeWithAccountKey:input.accountKey appId:input.appId queue:dispatch_get_main_queue()];
-  //
      [ZDKChat initializeWithAccountKey:input.accountKey appId:input.appId queue:dispatch_get_main_queue()];
-     if (input.deviceToken == (id)[NSNull null] || input.deviceToken.length == 0 ) input.deviceToken = @"";
-     [ZDKChat registerPushToken:input.deviceToken];
-    //[ZDKChat initializeWithAccountKey:input.accountKey queue:dispatch_get_main_queue()];
+     NSData *data = [input.deviceToken dataUsingEncoding:NSUTF8StringEncoding];
+     [ZDKChat registerPushToken:data];
 }
 
 - (void)setDepartment:(nonnull SetDepartmentRequest *)input error:(FlutterError * _Nullable __autoreleasing * _Nonnull)error {
